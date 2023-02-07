@@ -11,33 +11,38 @@ function runPromices(submitObj) {
   const delayStepField = Number(submitObj.target.elements[1].value);
   const runTimes = Number(submitObj.target.elements[2].value);
 
-  setTimeout(() => {
-    let i = 0;
-    const step = setInterval(() => {
-      if (i < runTimes) {
-        createPromise(i, delayStepField)
-          .then(({ position, delay }) => {
-            console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
-            Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
-          })
-          .catch(({ position, delay }) => {
-            console.log(`❌ Rejected promise ${position} in ${delay}ms`);
-            Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
-          });
-        i++;
-      } else {
-        clearInterval(step);
-      }
-    }, delayStepField);
-  }, firstDelayField - delayStepField);
+  let sumCounter = 0;
+  let i = 0;
+  while (i < runTimes) {
+    sumCounter = firstDelayField + delayStepField * i;
+
+    startPromice(i, sumCounter);
+    i++;
+  }
+}
+
+function startPromice(i, sumCounter) {
+  createPromise(i + 1, sumCounter)
+    .then(({ position, delay }) => {
+      console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
+      Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+    })
+    .catch(({ position, delay }) => {
+      console.log(`❌ Rejected promise ${position} in ${delay}ms`);
+      Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+    });
 }
 
 function createPromise(position, delay) {
   const shouldResolve = Math.random() > 0.3;
-  if (shouldResolve) {
-    return Promise.resolve({ position, delay });
-  } else {
-    // Reject
-    return Promise.reject({ position, delay });
-  }
+  const promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (shouldResolve) {
+        resolve({ position, delay });
+      } else {
+        reject({ position, delay });
+      }
+    }, delay);
+  });
+  return promise;
 }
