@@ -5,9 +5,12 @@ let colorInterval = null;
 
 startButton.addEventListener('click', onStartAction);
 stopButton.addEventListener('click', onStopAction);
+stopButton.setAttribute('disabled', true);
 
 function onStartAction() {
   startButton.setAttribute('disabled', true);
+  stopButton.removeAttribute('disabled');
+
   colorInterval = setInterval(
     () => (bodyElement.style.backgroundColor = getRandomHexColor()),
     1000
@@ -15,7 +18,8 @@ function onStartAction() {
 }
 
 function onStopAction() {
-  startButton.removeAttribute('disabled', false);
+  startButton.removeAttribute('disabled');
+  stopButton.setAttribute('disabled', true);
   clearInterval(colorInterval);
 }
 
