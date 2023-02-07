@@ -7,8 +7,6 @@ function runPromices(submitObj) {
   const delayStepField = Number(submitObj.target.elements[1].value);
   const runTimes = Number(submitObj.target.elements[2].value);
 
-  console.log(`дошли до цикла`);
-
   setTimeout(() => {
     let i = 0;
     const step = setInterval(() => {
